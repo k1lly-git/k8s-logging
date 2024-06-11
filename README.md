@@ -148,3 +148,12 @@ spec:
       #   hostPath:
       #     path: /var/log/pods
 ```
+
+Запускаем yaml файл через kubectl:
+```bash
+kubectl apply -f fluentd.yaml
+```
+На внешнем сервере проверяем логи:
+```bash
+tail -n 500 /var/log/syslog
+```
