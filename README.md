@@ -157,3 +157,7 @@ kubectl apply -f fluentd.yaml
 ```bash
 tail -n 500 /var/log/syslog
 ```
+
+#### refs:
+[fluentd-kubernetes-daemonset](https://github.com/fluent/fluentd-kubernetes-daemonset/tree/master)
+[fluent-plugin-remote_syslog](https://github.com/fluent-plugins-nursery/fluent-plugin-remote_syslog)
