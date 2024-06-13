@@ -16,8 +16,7 @@ TCP
 #module(load="imtcp")
 #input(type="imtcp" port="1514")
 ```
-
-Устанавливаем IP syslog сервера, порт, протокол в daemonset \
+Передаем через переменные окружения IP syslog сервера, порт, протокол в daemonset \
 fluentd.yaml:
 ```yaml
 ---
