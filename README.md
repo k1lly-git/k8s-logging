@@ -1,7 +1,7 @@
 # k8s-logging with sending to SIEM/Syslog server
 
 ## Grafana + Loki
-Устанавливаем helm (https://helm.sh/docs/intro/install/)
+Устанавливаем helm https://helm.sh/docs/intro/install/
 ```bash
 helm repo add grafana https://grafana.github.io/helm-charts
 helm repo update
@@ -51,7 +51,7 @@ helm install -n log --values values.yaml loki-stack grafana/loki-stack
 ```
 
 ```bash
-kubectl -n log port-forward svc/loki-stack 8000:80
+kubectl -n log port-forward svc/loki-stack-grafana 8000:80
 ```
 
 ```bash
