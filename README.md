@@ -1,5 +1,69 @@
 # k8s-logging with sending to SIEM/Syslog server
 
+## Grafana + Loki
+Устанавливаем helm (https://helm.sh/docs/intro/install/)
+```bash
+helm repo add grafana https://grafana.github.io/helm-charts
+helm repo update
+```
+values.yaml:
+```yaml
+loki:
+  enabled: true
+  isDefault: true
+  url: http://{{(include "loki.serviceName" .)}}:{{ .Values.loki.service.port }}
+  readinessProbe:
+    httpGet:
+      path: /ready
+      port: http-metrics
+    initialDelaySeconds: 45
+  livenessProbe:
+    httpGet:
+      path: /ready
+      port: http-metrics
+    initialDelaySeconds: 45
+  datasource:
+    jsonData: "{}"
+    uid: ""
+
+promtail:
+  enabled: true
+  config:
+    logLevel: info
+    serverPort: 3101
+    clients:
+      - url: http://{{ .Release.Name }}:3100/loki/api/v1/push
+
+grafana:
+  enabled: true 
+  sidecar:
+    datasources:
+      label: ""
+      labelValue: ""
+      enabled: true
+      maxLines: 1000
+  image:
+    tag: latest
+```
+```bash
+kubectl create ns log
+helm install -n log --values values.yaml loki-stack grafana/loki-stack
+```
+
+```bash
+kubectl -n log port-forward svc/loki-stack 8000:80
+```
+
+```bash
+kubectl -n log get secret/loki-stack-grafana -o custom-columns="VALUE":.data.admin-user --no-headers | base64 --decode
+kubectl -n log get secret/loki-stack-grafana -o custom-columns="VALUE":.data.admin-password --no-headers | base64 --decode
+````
+
+Логинимся в grafana через проброс портов [localhost:8000](http://127.0.0.1:8000) \
+Заходим в explore, выбираем data source Loki и проверяем
+
+## Fluentd
+
 ### Поднимаем syslog сервер
 ```bash
 sudo apt install rsyslog
