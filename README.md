@@ -62,7 +62,10 @@ kubectl -n log get secret/loki-stack-grafana -o custom-columns="VALUE":.data.adm
 Логинимся в grafana через проброс портов [localhost:8000](http://127.0.0.1:8000) \
 Заходим в explore, выбираем data source Loki и проверяем
 
-## Fluentd
+
+
+
+## Fluentd (пропускаем)
 
 ### Поднимаем syslog сервер
 ```bash
