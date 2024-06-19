@@ -164,17 +164,17 @@ spec:
               fieldRef:
                 fieldPath: spec.nodeName
           - name:  SYSLOG_HOST
-            value: "10.11.4.207"
+            value: "<IP>"
           - name:  SYSLOG_PORT
-            value: "1514"
+            value: "<PORT>"
           - name:  SYSLOG_PROTOCOL
-            value: "udp"
+            value: "<tcp/udp>"
           - name: FLUENT_CONTAINER_TAIL_PARSER_TYPE
             value: "cri"
           - name: FLUENT_CONTAINER_TAIL_PARSER_TIME_FORMAT
             value: "%Y-%m-%dT%H:%M:%S.%N%:z"
           - name: KUBERNETES_SERVICE_HOST
-            value: "10.96.0.1"
+            value: "<IP>"
           - name: KUBERNETES_SERVICE_PORT
             value: "443"
           - name: FLUENT_CONTAINER_TAIL_EXCLUDE_PATH
