@@ -1,6 +1,6 @@
 # k8s-logging with sending to SIEM/Syslog server
 
-## Grafana + Loki
+## Grafana + Loki + Promtail
 Устанавливаем helm https://helm.sh/docs/intro/install/
 ```bash
 helm repo add grafana https://grafana.github.io/helm-charts
@@ -164,17 +164,17 @@ spec:
               fieldRef:
                 fieldPath: spec.nodeName
           - name:  SYSLOG_HOST
-            value: "<IP>"
+            value: "10.11.4.207"
           - name:  SYSLOG_PORT
-            value: "<PORT>"
+            value: "1514"
           - name:  SYSLOG_PROTOCOL
-            value: "<tcp/udp>"
+            value: "udp"
           - name: FLUENT_CONTAINER_TAIL_PARSER_TYPE
             value: "cri"
           - name: FLUENT_CONTAINER_TAIL_PARSER_TIME_FORMAT
             value: "%Y-%m-%dT%H:%M:%S.%N%:z"
           - name: KUBERNETES_SERVICE_HOST
-            value: "<IP>"
+            value: "10.96.0.1"
           - name: KUBERNETES_SERVICE_PORT
             value: "443"
           - name: FLUENT_CONTAINER_TAIL_EXCLUDE_PATH
@@ -188,6 +188,8 @@ spec:
         volumeMounts:
         - name: varlog
           mountPath: /var/log
+        - name: varlogaudit
+          mountPath: /var/log/audit
         # volumeMounts:
         # - name: fluentd-config
         #   mountPath: /fluentd/etc
@@ -223,15 +225,9 @@ spec:
       - name: dockercontainerlogdirectory
         hostPath:
           path: /var/log/pods
-```
-
-Запускаем yaml файл через kubectl:
-```bash
-kubectl apply -f fluentd.yaml
-```
-На внешнем сервере проверяем логи:
-```bash
-tail -n 500 /var/log/syslog
+      - name: varlogaudit
+        hostPath:
+          path: /var/log/audit
 ```
 
 #### refs:
