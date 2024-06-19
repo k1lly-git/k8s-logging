@@ -65,7 +65,7 @@ kubectl -n log get secret/loki-stack-grafana -o custom-columns="VALUE":.data.adm
 
 
 
-## Fluentd (пропускаем)
+## Fluentd
 
 ### Поднимаем syslog сервер
 ```bash
@@ -91,7 +91,7 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: fluentd
-  namespace: default
+  namespace: kube-system
   labels:
     k8s-app: fluentd-logging
     version: v1
@@ -125,14 +125,14 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: fluentd
-  namespace: default
+  namespace: kube-system
 
 ---
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
   name: fluentd
-  namespace: default
+  namespace: kube-system
   labels:
     k8s-app: fluentd-logging
     version: v1
@@ -157,26 +157,31 @@ spec:
       - name: fluentd
         # image: fluent/fluentd-kubernetes-daemonset:v1-debian-syslog
         image: k1llydocker/fluentd:1
+        imagePullPolicy: Always
         env:
           - name: K8S_NODE_NAME
             valueFrom:
               fieldRef:
                 fieldPath: spec.nodeName
           - name:  SYSLOG_HOST
-            value: "<IP>"
+            value: "10.11.4.207"
           - name:  SYSLOG_PORT
-            value: "<PORT>"
+            value: "1514"
           - name:  SYSLOG_PROTOCOL
-            value: "<tcp/udp>"
+            value: "udp"
           - name: FLUENT_CONTAINER_TAIL_PARSER_TYPE
             value: "cri"
           - name: FLUENT_CONTAINER_TAIL_PARSER_TIME_FORMAT
             value: "%Y-%m-%dT%H:%M:%S.%N%:z"
-          # - name: FLUENT_CONTAINER_TAIL_EXCLUDE_PATH
-          #   value: /var/log/containers/fluent*
+          - name: KUBERNETES_SERVICE_HOST
+            value: "10.96.0.1"
+          - name: KUBERNETES_SERVICE_PORT
+            value: "443"
+          - name: FLUENT_CONTAINER_TAIL_EXCLUDE_PATH
+            value: /var/log/containers/fluent*
         resources:
           limits:
-            memory: 512Mi
+            memory: 1024Mi
           requests:
             cpu: 100m
             memory: 512Mi
@@ -190,15 +195,20 @@ spec:
         # - name: dockercontainerlogdirectory
         #   mountPath: /var/lib/docker/containers
         #   readOnly: true
-        - name: dockercontainerlogdirectory
-          mountPath: /var/log/containers
-          readOnly: true
-        # When actual pod logs in /var/log/pods, the following lines should be used.
+
         # - name: dockercontainerlogdirectory
-        #   mountPath: /var/log/pods
-        #   readOnly: true
+        #   mountPath: /var/log/containers
+          # readOnly: true
+
+        # When actual pod logs in /var/log/pods, the following lines should be used.
+        - name: dockercontainerlogdirectory
+          mountPath: /var/log/pods
+          readOnly: true
       terminationGracePeriodSeconds: 30
       volumes:
+      # - name: fluentd-config
+        # configMap:
+        #   name: fluentd-config
       - name: varlog
         hostPath:
           path: /var/log
@@ -206,13 +216,13 @@ spec:
       # - name: dockercontainerlogdirectory
       #   hostPath:
       #     path: /var/lib/docker/containers
-      - name: dockercontainerlogdirectory
-        hostPath:
-          path: /var/log/containers
-      # When actual pod logs in /var/log/pods, the following lines should be used.
       # - name: dockercontainerlogdirectory
       #   hostPath:
-      #     path: /var/log/pods
+      #     path: /var/log/containers
+      # # When actual pod logs in /var/log/pods, the following lines should be used.
+      - name: dockercontainerlogdirectory
+        hostPath:
+          path: /var/log/pods
 ```
 
 Запускаем yaml файл через kubectl:
