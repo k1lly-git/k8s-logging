@@ -81,7 +81,7 @@ yes
 
 ```bash
 kubectl auth can-i --as='system:serviceaccount:default:svc-test' --list
-```
+
 Resources                                       Non-Resource URLs                      Resource Names   Verbs \
 roles.rbac.authorization.k8s.io                 []                                     [admin]          [bind] \
 roles.rbac.authorization.k8s.io                 []                                     [edit]           [bind] \
@@ -115,3 +115,4 @@ secrets                                         []                              
                                                 [/version/]                            []               [get] \
                                                 [/version]                             []               [get] \
                                                 [/version]                             []               [get]
+```
