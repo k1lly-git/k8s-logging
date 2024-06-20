@@ -47,39 +47,6 @@ subjects:
 ```
 
 ```bash
-kubectl auth can-i --as='system:serviceaccount:default:svc-test' delete rolebindings
-```
-no
-```bash
-kubectl auth can-i --as='system:serviceaccount:default:svc-test' create pod
-```
-yes
-```bash
-kubectl auth can-i --as='system:serviceaccount:default:svc-test' create configmap
-```
-no
-```bash
-kubectl auth can-i --as='system:serviceaccount:default:svc-test' get secret
-```
-yes
-```bash
-kubectl auth can-i --as='system:serviceaccount:default:svc-test' delete secret
-```
-no
-```bash
-kubectl auth can-i --as='system:serviceaccount:default:svc-test' create serviceaccount
-```
-yes
-```bash
-kubectl auth can-i --as='system:serviceaccount:default:svc-test' create rolebinding
-```
-yes
-```bash
-kubectl auth can-i --as='system:serviceaccount:default:svc-test' create pods/exec
-```
-yes
-
-```bash
 kubectl auth can-i --as='system:serviceaccount:default:svc-test' --list
 
 Resources                                       Non-Resource URLs                      Resource Names   Verbs 
@@ -116,3 +83,36 @@ secrets                                         []                              
                                                 [/version]                             []               [get] 
                                                 [/version]                             []               [get]
 ```
+
+```bash
+kubectl auth can-i --as='system:serviceaccount:default:svc-test' delete rolebindings
+```
+no
+```bash
+kubectl auth can-i --as='system:serviceaccount:default:svc-test' create pod
+```
+yes
+```bash
+kubectl auth can-i --as='system:serviceaccount:default:svc-test' create configmap
+```
+no
+```bash
+kubectl auth can-i --as='system:serviceaccount:default:svc-test' get secret
+```
+yes
+```bash
+kubectl auth can-i --as='system:serviceaccount:default:svc-test' delete secret
+```
+no
+```bash
+kubectl auth can-i --as='system:serviceaccount:default:svc-test' create serviceaccount
+```
+yes
+```bash
+kubectl auth can-i --as='system:serviceaccount:default:svc-test' create rolebinding
+```
+yes
+```bash
+kubectl auth can-i --as='system:serviceaccount:default:svc-test' create pods/exec
+```
+yes
