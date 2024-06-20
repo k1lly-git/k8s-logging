@@ -162,14 +162,14 @@ EOF
 ```
 
 В файле /etc/kubernetes/manifests/kube-apiserver.yaml добавляем строки в аргументы запуска (containers.command)
-```bash
+```yaml
     - --audit-policy-file=/var/lib/k8s_audit/audit-policy.yaml
     - --audit-log-path=/var/log/audit/audit.log
     - --audit-log-maxsize=500
     - --audit-log-maxbackup=5
 ```
 Ниже монтируем тома в volumeMounts:
-```bash
+```yaml
     - mountPath: /var/lib/k8s_audit/audit-policy.yaml
       name: audit
       readOnly: true
@@ -178,7 +178,7 @@ EOF
       readOnly: false
 ```
 Листаем вниз до раздела volumes и добавляем наши тома:
-```bash
+```yaml
   - name: audit
     hostPath:
       path: /var/lib/k8s_audit/audit-policy.yaml
