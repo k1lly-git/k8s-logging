@@ -87,6 +87,109 @@ TCP
 #module(load="imtcp")
 #input(type="imtcp" port="1514")
 ```
+
+Билдим образ контейнера и пуллим
+```bash
+git clone https://github.com/k1lly-git/k8s-logging
+cd k8s-logging/debian-syslog
+docker build -t fluentd-syslog .
+docker pull fluentd-syslog
+```
+
+На ноде где работает kube-apiserver настраиваем работу Audit Logs
+```bash
+mkdir /var/lib/k8s_audit
+mkdir /var/log/audit/
+touch /var/log/audit/audit.log
+cat > /var/lib/k8s_audit/audit-policy.yaml <<EOF
+apiVersion: audit.k8s.io/v1 # This is required.
+kind: Policy
+omitStages:
+  - "RequestReceived"
+rules:
+  - level: RequestResponse
+    resources:
+    - group: ""
+      resources: ["pods"]
+
+  - level: None
+    resources:
+    - group: ""
+      resources: ["configmaps"]
+      resourceNames: ["controller-leader"]
+
+  - level: None
+    users: ["system:kube-proxy"]
+    verbs: ["watch"]
+    resources:
+    - group: "" # core API group
+      resources: ["endpoints", "services"]
+
+  - level: None
+    userGroups: ["system:authenticated"]
+    nonResourceURLs:
+    - "/api*" # Wildcard matching.
+    - "/version"
+
+  - level: Metadata
+    resources:
+    - group: "" # core API group
+      resources: ["secrets", "configmaps"]
+
+  - level: Metadata
+    omitStages:
+      - "RequestReceived"
+
+  - level: None
+    verbs:
+    - get
+    - list
+    - watch
+    resources:
+    - group: ""
+      resources:
+      - pods
+      - configmaps
+      - secrets
+    namespaces:
+    - calico-apiserver
+    - calico-system
+    - log
+    - metallb-system
+    - tigera-operator
+    - olm
+EOF
+```
+
+Монтируем тома в volumeMounts:
+```bash
+    - mountPath: /var/lib/k8s_audit/audit-policy.yaml
+      name: audit
+      readOnly: true
+    - mountPath: /var/log/audit/audit.log
+      name: audit-log
+      readOnly: false
+```
+Листаем вниз до раздела volumes и добавляем наши тома:
+```bash
+  - name: audit
+    hostPath:
+      path: /var/lib/k8s_audit/audit-policy.yaml
+      type: File
+  - name: audit-log
+    hostPath:
+      path: /var/log/audit/audit.log
+      type: FileOrCreate
+```
+
+В файле /etc/kubernetes/manifests/kube-apiserver.yaml добавляем строки в аргументы запуска (containers.command)
+````bash
+    - --audit-policy-file=/var/lib/k8s_audit/audit-policy.yaml
+    - --audit-log-path=/var/log/audit/audit.log
+    - --audit-log-maxsize=500
+    - --audit-log-maxbackup=5
+```
+После изменения конфигурации запуска kube-apiserver кластер должен автоматически перезагрузиться \
 Передаем через переменные окружения IP syslog сервера, порт, протокол в daemonset \
 fluentd.yaml:
 ```yaml
@@ -99,7 +202,6 @@ metadata:
   labels:
     k8s-app: fluentd-logging
     version: v1
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -160,7 +262,7 @@ spec:
       containers:
       - name: fluentd
         # image: fluent/fluentd-kubernetes-daemonset:v1-debian-syslog
-        image: k1llydocker/fluentd:1
+        image: k1llydocker/fluentd:1 # наш запуленный ранее образ
         imagePullPolicy: Always
         env:
           - name: K8S_NODE_NAME
