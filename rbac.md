@@ -78,3 +78,40 @@ yes
 kubectl auth can-i --as='system:serviceaccount:default:svc-test' create pods/exec
 ```
 yes
+
+```bash
+kubectl auth can-i --as='system:serviceaccount:default:svc-test' --list
+```
+Resources                                       Non-Resource URLs                      Resource Names   Verbs
+roles.rbac.authorization.k8s.io                 []                                     [admin]          [bind]
+roles.rbac.authorization.k8s.io                 []                                     [edit]           [bind]
+roles.rbac.authorization.k8s.io                 []                                     [view]           [bind]
+pods/exec                                       []                                     []               [create get]
+serviceaccounts                                 []                                     []               [create]
+selfsubjectreviews.authentication.k8s.io        []                                     []               [create]
+selfsubjectaccessreviews.authorization.k8s.io   []                                     []               [create]
+selfsubjectrulesreviews.authorization.k8s.io    []                                     []               [create]
+rolebindings.rbac.authorization.k8s.io          []                                     []               [create]
+pods                                            []                                     []               [get list watch create]
+configmaps                                      []                                     []               [get list watch]
+secrets                                         []                                     []               [get list watch]
+                                                [/.well-known/openid-configuration/]   []               [get]
+                                                [/.well-known/openid-configuration]    []               [get]
+                                                [/api/*]                               []               [get]
+                                                [/api]                                 []               [get]
+                                                [/apis/*]                              []               [get]
+                                                [/apis]                                []               [get]
+                                                [/healthz]                             []               [get]
+                                                [/healthz]                             []               [get]
+                                                [/livez]                               []               [get]
+                                                [/livez]                               []               [get]
+                                                [/openapi/*]                           []               [get]
+                                                [/openapi]                             []               [get]
+                                                [/openid/v1/jwks/]                     []               [get]
+                                                [/openid/v1/jwks]                      []               [get]
+                                                [/readyz]                              []               [get]
+                                                [/readyz]                              []               [get]
+                                                [/version/]                            []               [get]
+                                                [/version/]                            []               [get]
+                                                [/version]                             []               [get]
+                                                [/version]                             []               [get]
