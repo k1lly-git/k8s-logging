@@ -161,7 +161,14 @@ rules:
 EOF
 ```
 
-Монтируем тома в volumeMounts:
+В файле /etc/kubernetes/manifests/kube-apiserver.yaml добавляем строки в аргументы запуска (containers.command)
+````bash
+    - --audit-policy-file=/var/lib/k8s_audit/audit-policy.yaml
+    - --audit-log-path=/var/log/audit/audit.log
+    - --audit-log-maxsize=500
+    - --audit-log-maxbackup=5
+```
+Ниже монтируем тома в volumeMounts:
 ```bash
     - mountPath: /var/lib/k8s_audit/audit-policy.yaml
       name: audit
@@ -182,13 +189,6 @@ EOF
       type: FileOrCreate
 ```
 
-В файле /etc/kubernetes/manifests/kube-apiserver.yaml добавляем строки в аргументы запуска (containers.command)
-````bash
-    - --audit-policy-file=/var/lib/k8s_audit/audit-policy.yaml
-    - --audit-log-path=/var/log/audit/audit.log
-    - --audit-log-maxsize=500
-    - --audit-log-maxbackup=5
-```
 После изменения конфигурации запуска kube-apiserver кластер должен автоматически перезагрузиться \
 Передаем через переменные окружения IP syslog сервера, порт, протокол в daemonset \
 fluentd.yaml:
