@@ -162,7 +162,7 @@ EOF
 ```
 
 В файле /etc/kubernetes/manifests/kube-apiserver.yaml добавляем строки в аргументы запуска (containers.command)
-````bash
+```bash
     - --audit-policy-file=/var/lib/k8s_audit/audit-policy.yaml
     - --audit-log-path=/var/log/audit/audit.log
     - --audit-log-maxsize=500
