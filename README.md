@@ -25,6 +25,8 @@ loki:
   datasource:
     jsonData: "{}"
     uid: ""
+  image:
+    tag: latest
 
 promtail:
   enabled: true
@@ -33,6 +35,8 @@ promtail:
     serverPort: 3101
     clients:
       - url: http://{{ .Release.Name }}:3100/loki/api/v1/push
+  image:
+    tag: latest
 
 grafana:
   enabled: true 
