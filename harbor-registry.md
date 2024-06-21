@@ -34,7 +34,19 @@ sudo ./install.sh
 Создаем новый проект в разделе Projects -> New Project \
 Добавляем нового пользователя в Members -> + USER \
 Чтобы запушить образ, переходим в repositories -> Push Command \
-В случае Access Level Private нужно залогиниться в docker через креды пользователя в Harbor
+- Устанавливаем пакет ca-certificates если он не установлен в системе:
+```bash
+sudo apt -y install ca-certificates
+```
+- Копируем корневой сертификат с расширением .crt в директорию /usr/local/share/ca-certificates:
+```bash
+sudo cp harbor.crt /usr/local/share/ca-certificates
+```
+- Устанавливаем сертификат:
+```bash
+sudo update-ca-certificates
+```
+Далее нужно залогиниться в docker через креды пользователя в Harbor
 ```bash
 docker login <harbor-host.com>
 ```
