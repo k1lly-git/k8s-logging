@@ -1,5 +1,5 @@
 ## Ошибка с validation
-Под обязан иметь label team
+Любой ресурс обязан иметь label team
 ```yaml
 apiVersion: kyverno.io/v1
 kind: ClusterPolicy
