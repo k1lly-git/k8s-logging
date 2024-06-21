@@ -40,7 +40,7 @@ sudo apt -y install ca-certificates
 ```
 - Копируем корневой сертификат с расширением .crt в директорию /usr/local/share/ca-certificates:
 ```bash
-sudo cp harbor.crt /usr/local/share/ca-certificates
+sudo cp ca.crt /usr/local/share/ca-certificates
 ```
 - Устанавливаем сертификат:
 ```bash
