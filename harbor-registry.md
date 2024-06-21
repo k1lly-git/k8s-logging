@@ -32,6 +32,7 @@ sudo ./install.sh
 
 Логин по умолчанию — admin, пароль — Harbor12345, можно создать нового пользователя в Users \
 Создаем новый проект в разделе Projects -> New Project \
+Добавляем нового пользователя в Members -> + USER \
 Чтобы запушить образ, переходим в repositories -> Push Command \
 В случае Access Level Private нужно залогиниться в docker через креды пользователя в Harbor
 ```bash
