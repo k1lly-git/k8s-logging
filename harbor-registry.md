@@ -11,9 +11,7 @@ tar -xzvf harbor-online-installer-v2.11.0.tgz
 cd harbor
 mv harbor.yml.tmpl harbor.yml
 ```
-- В параметре hostname задаем IP-адрес или имя хоста, на котором будет находиться веб-интерфейс Harbor \
-- В параметре certificate прописываем полный путь до файла с сертификатом с расширением .crt \
-- В параметре private_key прописываем полный путь до файла с закрытым ключом с расширением .key \
+
 Генерация ключа и сертификата:
 ```bash
 openssl genrsa -out ca.key 4096
@@ -22,6 +20,11 @@ openssl req -x509 -new -nodes -sha512 -days 3650 \
  -key ca.key \
  -out ca.crt
 ```
+
+В файле harbor.yml:
+- В параметре hostname задаем IP-адрес или имя хоста, на котором будет находиться веб-интерфейс Harbor \
+- В параметре certificate прописываем полный путь до файла с сертификатом с расширением .crt \
+- В параметре private_key прописываем полный путь до файла с закрытым ключом с расширением .key \
 
 ```bash
 sudo ./install.sh
