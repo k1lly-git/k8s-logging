@@ -1,0 +1,33 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: mutation-error
+spec:
+  rules:
+  - name: haproxy-image
+    match:
+      any:
+      - resources:
+          kinds:
+          - Pod
+    mutate:
+      patchStrategicMerge:
+        spec:
+          containers:
+          - name: image
+            image: haproxy:latest
+            command:
+            - ls
+  - name: add-ns
+    match:
+      any:
+      - resources:
+          kinds:
+          - Pod
+          - Service
+          - ConfigMap
+          - Secret
+    mutate:
+      patchStrategicMerge:
+        metadata:
+          namespace: develop

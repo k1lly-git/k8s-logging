@@ -15,6 +15,6 @@ spec:
       - "sleep 10m"
     securityContext:
       capabilities:
-        drop:
-        - ALL
+        #drop:
+        #- ALL
         add: ["SETUID"]
