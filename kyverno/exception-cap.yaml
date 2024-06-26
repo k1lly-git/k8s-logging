@@ -1,0 +1,31 @@
+apiVersion: kyverno.io/v2beta1
+kind: PolicyException
+metadata:
+  name: exception-cap
+spec:
+  exceptions:
+  - policyName: drop-all-capabilities
+    ruleNames:
+    - require-drop-all
+  match:
+    any:
+    - resources:
+        kinds:
+        - Pod
+  conditions:
+    any:
+    #- key: SETUID
+    #  operator: AnyNotIn
+    #  value: "{{ request.object.spec.[ephemeralContainers, initContainers, containers][].securityContext.capabilities.drop[].to_upper(@) || [] }}"
+    - key: "{{ request.object.metadata.labels.app || '' }}"
+      operator: Equals
+      value: dev
+#  podSecurity:
+#    - controlName: Capabilities
+#      images:
+#        - alpine*
+#        - nginx*
+#      restrictedField: spec.containers[*].securityContext.capabilities.add
+#      values:
+#        - SETUID
+#        - SETGID
