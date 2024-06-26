@@ -1,5 +1,7 @@
 ## Ошибка с validation
-Любой ресурс обязан иметь label team
+Любой ресурс обязан иметь label team в неймспейсе dev \
+У образов должны быть теги, но не latest \
+PodSecurity не должен быть privileged
 ```yaml
 apiVersion: kyverno.io/v1
 kind: ClusterPolicy
@@ -107,7 +109,7 @@ spec:
               readOnlyRootFilesystem: true
 ```
 ## Ошибка с mutation
-При создании пода мутация меняет образ контейнера на несуществующий
+При создании пода мутация меняет образ контейнера на haproxy, у pod, svc, cm, secret меняет namespace на develop
 ```yaml
 apiVersion: kyverno.io/v1
 kind: ClusterPolicy
@@ -127,8 +129,6 @@ spec:
           containers:
           - name: image
             image: haproxy:latest
-            command:
-            - ls
   - name: add-ns
     match:
       any:
@@ -144,7 +144,7 @@ spec:
           namespace: develop
 ```
 ## Исключение с capabilities
-Контейнерам запрещено использовать capabilities, но можно включать SETUID, SETGID с лейблом dev \
+Контейнерам запрещено использовать capabilities, но с помощью исключающей политики можно включать SETUID, SETGID с лейблом dev \
 ClusterPolicy:
 ```yaml
 apiVersion: kyverno.io/v1
