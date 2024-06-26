@@ -1,7 +1,8 @@
 ## Ошибка с validation
 Любой ресурс обязан иметь label team в неймспейсе dev \
 У образов должны быть теги, но не latest \
-PodSecurity не должен быть privileged
+PodSecurity не должен быть privileged \
+(Закоментированные строки - валидные значения для политики)
 ```yaml
 apiVersion: kyverno.io/v1
 kind: ClusterPolicy
@@ -24,8 +25,8 @@ spec:
       pattern:
         metadata:
           labels:
-            #1abe1: "?*"
-            team: "?*"
+            1abe1: "?*"
+            #team: "?*"
   - name: require-image-tag
     match:
       any:
@@ -49,8 +50,8 @@ spec:
       pattern:
         spec:
           containers:
-          #- image: "!*:*"
-          - image: "!*:latest"
+          - image: "!*:*"
+          #- image: "!*:latest"
   - name: validate-nodeport
     match:
       any:
@@ -70,8 +71,8 @@ spec:
           - Pod
     validate:
       podSecurity:
-        level: baseline
-        #level: privileged
+        #level: baseline
+        level: privileged
         version: latest
   - name: privileged-containers
     match:
