@@ -184,15 +184,6 @@ spec:
                 - key: ALL
                   operator: AnyNotIn
                   value: "{{ element.securityContext.capabilities.drop[].to_upper(@) || `[]` }}"
-                  #- key: "{{ request.object.metadata.namespace }}"
-                  #operator: NotEquals
-                  #value: "dev"
-                  #- key: "{{ element.securityContext.capabilities.add[] || '' }}"
-                  #operator: AnyNotIn
-                  #value:
-                  #- SETUID
-                  #- SETGID
-                  #- ''
     - name: setuid
       match:
         any:
@@ -237,9 +228,6 @@ spec:
         - Pod
   conditions:
     any:
-    #- key: SETUID
-    #  operator: AnyNotIn
-    #  value: "{{ request.object.spec.[ephemeralContainers, initContainers, containers][].securityContext.capabilities.drop[].to_upper(@) || [] }}"
     - key: "{{ request.object.metadata.labels.app || '' }}"
       operator: Equals
       value: dev
