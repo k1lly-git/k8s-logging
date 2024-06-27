@@ -107,7 +107,8 @@ spec:
         spec:
           containers:
           - securityContext:
-              readOnlyRootFilesystem: true
+              readOnlyRootFilesystem: false
+              #readOnlyRootFilesystem: true
 ```
 ## Ошибка с mutation
 При создании пода мутация меняет образ контейнера на haproxy, у pod, svc, cm, secret меняет namespace на develop
