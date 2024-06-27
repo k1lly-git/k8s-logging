@@ -25,7 +25,7 @@ spec:
       pattern:
         metadata:
           labels:
-            1abe1: "?*"
+            labe1: "?*"
             #team: "?*"
   - name: require-image-tag
     match:
